@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   icon: {
-    right: 190,
+    right: 160,
     top: 50,
   },
   title: {

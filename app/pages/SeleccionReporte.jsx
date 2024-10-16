@@ -69,13 +69,14 @@ const SeleccionReporte = () => {
 
 const styles = StyleSheet.create({
   containerBotones: {
-    width: 500,
+    width: 400,
     backgroundColor: 'white',
     justifyContent: 'center',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    rowGap: 20,
+    rowGap: 10,
     height: 200,
+    bottom:30
   },
   icon: {
     marginTop: 50,
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   title: {
-    bottom: 55,
+    bottom: 50,
     alignSelf: 'center',
     fontSize: 27,
     marginTop: 120,
