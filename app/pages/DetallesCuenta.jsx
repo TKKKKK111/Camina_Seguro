@@ -18,20 +18,15 @@ const DetallesCuenta = () => {
   const db = FIREBASE_DB;
 
   const validateForm = () => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|hotmail\.com|outlook\.com)$/;
     const phoneRegex = /^[0-9]{11}$/;
     const nameRegex = /^[a-zA-Z\s]+$/;
-    const passwordRegex = /^[a-zA-Z0-9]{6,}$/;
-    const addressRegex = /^[a-zA-Z\s]{1,24}\s\d{1,4}$/;
+    const addressRegex = /^[a-zA-Z\s]{1,60}\s\d{1,4}$/;
 
     if (!name.trim() || name.length < 10 || !nameRegex.test(name)) {
       Alert.alert('Error', 'El nombre es requerido y debe contener solo letras.');
       return false;
     }
-    if (!email.trim() || !emailRegex.test(email)) {
-      Alert.alert('Error', 'El correo es requerido y debe tener un formato válido.');
-      return false;
-    }
+   
     if (!phone.trim() || !phoneRegex.test(phone)) {
       Alert.alert('Error', 'El teléfono es requerido y debe contener exactamente 11 dígitos numéricos.');
       return false;
@@ -40,10 +35,7 @@ const DetallesCuenta = () => {
       Alert.alert('Error', 'Por favor, ingresar una dirección válida.');
       return false;
     }
-    if (password.length < 6 || !passwordRegex.test(password)) {
-      Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres.');
-      return false;
-    }
+  
     return true;
   };
 
@@ -62,8 +54,7 @@ const DetallesCuenta = () => {
 
       if (userDoc.exists()) {
         setUsers(userDoc.data()); // Guardar los datos en el estado
-        setName(userDoc.data().name || ''); // Asignar datos al estado
-        setEmail(userDoc.data().email || user.email); // Asignar el correo desde Firebase Authentication
+        setName(userDoc.data().name || '');
         setPhone(userDoc.data().phone || '');
         setAddress(userDoc.data().address || '');
       } else {
@@ -97,7 +88,6 @@ const DetallesCuenta = () => {
       // Actualizar los datos en Firestore
       await updateDoc(userDocRef, {
         name: name.trim() === '' ? users.name : name,
-        email: email.trim() === '' ? user.email : email,
         phone: phone.trim() === '' ? users.phone : phone,
         address: address.trim() === '' ? users.address : address
       });

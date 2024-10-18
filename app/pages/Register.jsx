@@ -5,7 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { Link, router } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'; 
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_DB } from "../../FirebaseConfig";
 
@@ -20,12 +20,10 @@ const Register = () => {
     
     const validateForm = () => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|hotmail\.com|outlook\.com)$/;
-
         const phoneRegex = /^[0-9]{11}$/;
         const nameRegex = /^[a-zA-Z\s]+$/;
         const passwordRegex = /^[a-zA-Z0-9]{6,}$/;
-        const addressRegex = /^[a-zA-Z\s]{1,24}\s\d{1,4}$/;
-        
+        const addressRegex = /^[a-zA-Z\s]{1,60}\s\d{1,4}$/;
 
         if (!name.trim() || name.length < 10 || !nameRegex.test(name)) {
             Alert.alert('Error', 'El nombre es requerido y debe contener solo letras.');
@@ -39,7 +37,7 @@ const Register = () => {
             Alert.alert('Error', 'Por favor ingresar su teléfono con +569.');
             return false;
         }
-        if (!address.trim() || address.length< 5 || !addressRegex.test(address)) {
+        if (!address.trim() || address.length < 5 || !addressRegex.test(address)) {
             Alert.alert('Error', 'Por favor ingresar una dirección válida.');
             return false;
         }
@@ -53,7 +51,11 @@ const Register = () => {
     const handleRegister = async () => {
         if (validateForm()) {
             try {
+                
+                const userCredential = await createUserWithEmailAndPassword(Auth, email, password);
                 const user = userCredential.user;
+
+                
                 await setDoc(doc(Db, 'users', user.uid), {
                     name: name,
                     email: email,
@@ -64,12 +66,6 @@ const Register = () => {
                     rol: 'usuario',
                 });
 
-
-                const userCredential = await createUserWithEmailAndPassword(Auth, email, password);
-           
-
-               
-
                 Alert.alert(`Bienvenido ${name}`);
                 router.push('/pages/home');
             } catch (error) {
@@ -79,92 +75,84 @@ const Register = () => {
     };
 
     return (
-        <> 
-         
-                
-              
-
-      
-                <View style={styles.container}>
-                    
+        <>
+            <View style={styles.container}>
                 <StatusBar style="auto" />
-
-                <Link asChild href="#" style={{width:50, height:50, left:15}}>
+                <Link asChild href="#" style={{ width: 50, height: 50, left: 15 }}>
                     <TouchableOpacity>
                         <FontAwesome style={styles.icon} name="angle-left" size={36} color="#FF7070" />
                     </TouchableOpacity>
                 </Link>
-            <KeyboardAvoidingView behavior="position" >
-                <Text style={styles.title}>Información de contacto</Text>
-                <Text style={styles.description}>
-                
-                   Su correo electrónico se utilizará exclusivamente para enviarle avisos de emergencia y su teléfono exclusivamente para llamadas de emergencia. Su información está segura con nosotros.
-                </Text>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Nombre completo:</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="John Doe"
-                        onChangeText={setName}
-                        value={name}
-                        maxLength={50}
-                        autoCapitalize="words"
-                    />
-                </View>
+                <KeyboardAvoidingView behavior="position">
+                    <Text style={styles.title}>Información de contacto</Text>
+                    <Text style={styles.description}>
+                        Su correo electrónico se utilizará exclusivamente para enviarle avisos de emergencia y su teléfono exclusivamente para llamadas de emergencia. Su información está segura con nosotros.
+                    </Text>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Nombre completo:</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="John Doe"
+                            onChangeText={setName}
+                            value={name}
+                            maxLength={50}
+                            autoCapitalize="words"
+                        />
+                    </View>
 
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Correo:</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="ejemplo@gmail.com"
-                        onChangeText={setEmail}
-                        value={email}
-                        maxLength={50}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                    />
-                </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Correo:</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="ejemplo@gmail.com"
+                            onChangeText={setEmail}
+                            value={email}
+                            maxLength={50}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                        />
+                    </View>
 
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Teléfono:</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="56990248573"
-                        keyboardType="numeric"
-                        onChangeText={setPhone}
-                        value={phone}
-                        maxLength={11}
-                    />
-                </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Teléfono:</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="56990248573"
+                            keyboardType="numeric"
+                            onChangeText={setPhone}
+                            value={phone}
+                            maxLength={11}
+                        />
+                    </View>
 
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Dirección:</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Calle falsa 123"
-                        onChangeText={setAddress}
-                        value={address}
-                    />
-                </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Dirección:</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Calle falsa 123"
+                            onChangeText={setAddress}
+                            value={address}
+                        />
+                    </View>
 
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Contraseña:</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Contraseña"
-                        secureTextEntry={true}
-                        onChangeText={setPassword}
-                        value={password}
-                    />
-                </View>
-                
-                <View style={styles.buttons}>
-                    <TouchableOpacity style={styles.button} onPress={handleRegister}>
-                        <Text style={styles.buttonText}>Continuar</Text>
-                    </TouchableOpacity>
-                </View>
-            </KeyboardAvoidingView>
-        </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Contraseña:</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Contraseña"
+                            secureTextEntry={true}
+                            onChangeText={setPassword}
+                            value={password}
+                        />
+                    </View>
+
+                    <View style={styles.buttons}>
+                        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+                            <Text style={styles.buttonText}>Continuar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAvoidingView>
+            </View>
         </>
     );
 };
@@ -201,7 +189,6 @@ const styles = StyleSheet.create({
     inputContainer: {
         marginBottom: 15,
         left: 40,
-        
         width: '80%',
     },
     label: {

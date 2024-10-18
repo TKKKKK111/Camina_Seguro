@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     rowGap: 10,
     height: 200,
-    bottom:30
+    bottom:30,
+    left:40
   },
   icon: {
     marginTop: 50,
