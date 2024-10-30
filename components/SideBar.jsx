@@ -38,13 +38,15 @@ export default function SideBars({ isVisible, onClose } ) {
             <Text style={styles.menuItemText}>Perfil</Text>
           </TouchableOpacity>
           </Link>
-          
+        
+
+
+          <Link asChild href="/pages/Foro">
           <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuItemText}>Foro</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuItemText}>Denuncias</Text>
-          </TouchableOpacity>
+          </Link>
+          
           <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuItemText}>Noticias</Text>
           </TouchableOpacity>

@@ -18,28 +18,32 @@ const Login = () => {
   const auth = FIREBASE_AUTH;
   const db = FIREBASE_DB;
   const router = useRouter();
+  
+  
+  
   const signIn = async () => {
     setLoading(true);
     try {
-      // Iniciar sesión con email y contraseña
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user; // Obtener el usuario autenticado
+    
 
-      // Ahora que el usuario está autenticado, hacemos la consulta a Firestore para obtener el nombre
-      const userDocRef = doc(db, 'users', user.uid); // Usamos el UID del usuario para buscar en Firestore
+
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user; 
+
+      const userDocRef = doc(db, 'users', user.uid); 
       const userDoc = await getDoc(userDocRef);
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        const userName = userData.name; // Aquí obtenemos el nombre del usuario
+        const userName = userData.name; 
 
-        // Mostrar la alerta de bienvenida con el nombre del usuario
+    
         Alert.alert('Bienvenido de nuevo a la aplicación, ' + userName);
 
-        // Redirigir a la página principal después de mostrar la alerta
+       
         router.push('/pages/home');
       } else {
-        // Si no hay datos del usuario en Firestore
+   
         Alert.alert('No se encontraron datos del usuario en la base de datos.');
       }
     } catch (error) {
