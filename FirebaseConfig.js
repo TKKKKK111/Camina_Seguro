@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
@@ -22,6 +21,3 @@ export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 export const FIREBASE_DB = getFirestore(FIREBASE_APP);
-=======
-
->>>>>>> 09af5110bc58065259529e54e8b20ff66d0a7cfa
