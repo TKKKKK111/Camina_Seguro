@@ -32,14 +32,14 @@ const BotonSOS = () => {
 
   const handleReportar = async () => {
     try {
-      const user = auth.currentUser; // Obtener el usuario autenticado
+      const user = auth.currentUser; 
 
       if (!user) {
         Alert.alert('Debes estar autenticado para reportar');
         return;
       }
 
-      // Obtener el documento del usuario desde Firestore
+      
       const userDoc = await getDoc(doc(db, 'users', user.uid));
 
       if (!userDoc.exists()) {
@@ -47,17 +47,15 @@ const BotonSOS = () => {
         return;
       }
 
-      // Validar si ya existe un reporte pendiente para el usuario
       const reportePendienteQuery = query(
         collection(db, 'reporte'),
         where('uid', '==', user.uid),
         where('estado', 'in', ['abierto','pendiente']),
         where('resolvedAt', '==', null),
-        limit(1) // Limitamos la consulta a solo 1 resultado
+        limit(1) 
       );
       const reportePendiente = await getDocs(reportePendienteQuery);
 
-      // Si hay algún reporte pendiente, mostramos alerta y detenemos la creación
       if (!reportePendiente.empty) {
         Alert.alert('Ya tienes un reporte pendiente. Debes esperar a que se resuelva antes de crear otro.');
         return;
