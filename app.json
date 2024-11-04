@@ -9,6 +9,9 @@
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+      }
+
+
     },
     "ios": {
       "supportsTablet": true,
@@ -44,4 +47,4 @@
       "typedRoutes": true
     }
   }
-}
+

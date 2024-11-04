@@ -34,6 +34,38 @@ export default function Foro() {
     }
   };
 
+
+
+
+  const calcularTiempoPublicado = (post)=>  {
+    const ahora = new Date();
+    const diferenciaMs = ahora - new Date(post); 
+  
+    const segundos = Math.floor(diferenciaMs / 1000);
+    const minutos = Math.floor(segundos / 60);
+    const horas = Math.floor(minutos / 60);
+    const dias = Math.floor(horas / 24);
+    const semanas = Math.floor(dias / 7);
+  
+    if (semanas > 0) {
+      return `Hace ${semanas} semana${semanas > 1 ? 's' : ''}`;
+    } else if (dias > 0) {
+      return `Hace ${dias} día${dias > 1 ? 's' : ''}`;
+    } else if (horas > 0) {
+      return `Hace ${horas} hora${horas > 1 ? 's' : ''}`;
+    } else if (minutos > 0) {
+      return `Hace ${minutos} minuto${minutos > 1 ? 's' : ''}`;
+    } else {
+      return `Hace unos segundos`;
+    }
+  }
+
+
+
+
+
+
+
   useEffect(() => {
     getPostActual();
   }, []);
@@ -71,7 +103,7 @@ export default function Foro() {
           <Text style={styles.postTitle}>{post.title}</Text>
           <Text style={styles.postDescription}>{post.content}</Text>
           <View style={styles.postFooter}>
-            <Text style={styles.postTime}>"15:30"</Text>
+            <Text style={styles.postTime}>{calcularTiempoPublicado(post.createdAt)}</Text>
             <Text style={styles.postTime}>{post.username}</Text>
             <View style={styles.postStats}>
               <Ionicons name="heart" size={16} color="red" />

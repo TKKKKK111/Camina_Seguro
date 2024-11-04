@@ -1,91 +1,53 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, Text, View, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-
-import { Link, router } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import Checkboxs from '../components/CheckBox';
-import User, { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
-import { useEffect } from 'react';
-
-
-
-
-
 
 const Index = () => {
-
-
-  const InsideLayout = ()=>{
-    return(
-    
-    router.push('/pages/home')
-    
-    )
-  }
-  
-  const [user, setUser] = useState( User ? User:null);
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [isPress, setPress] = useState(true);
 
   useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
       setUser(user);
-    });  
+    });
 
-
+    return () => unsubscribe(); // Cleanup subscription on unmount
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      router.push('/pages/home');
+    }
+  }, [user, router]);
 
-  const [isPress, setPress] = useState(true);
   const handleCheckboxChange = () => {
     setPress(!isPress);
   };
+
   return (
-   
-    user ? InsideLayout() : 
-   
-   <>
-  
-
-
-    <SafeAreaView>
-   <StatusBar style="auto" />
-   </SafeAreaView>
+    <>
+      <SafeAreaView>
+        <StatusBar style="auto" />
+      </SafeAreaView>
 
       <LinearGradient colors={['#E95E60', '#FFD270']}>
-        <Text
-          style={{
-            fontSize: 28,
-            alignSelf: 'center',
-            justifyContent: 'center',
-            fontFamily: 'Bold',
-            color: 'white',
-            top: 50,
-            height: 84,
-            width: 350,
-          }}
-        >
-          Bienvenido a Segurizate
-        </Text>
+        <Text style={styles.welcomeText}>Bienvenido a Segurizate</Text>
 
         <Image
           source={require('../assets/imagenes/IconoLogin.png')}
-          style={{ width: 350, height: 300, top: 20, alignSelf: 'center' }}
+          style={styles.logo}
         />
-       
       </LinearGradient>
 
-      <Text
-        style={{
-          alignSelf: 'center',
-          top: 20,
-          fontSize: 15,
-          color: 'gray',
-          fontStyle: 'italic',
-        }}
-      >
+      <Text style={styles.infoText}>
         ¡Camina seguro junto a nuestra App!
         <FontAwesome style={{ backgroundColor: 'white' }} name="hand-spock-o" size={24} color="#FF7070" />
       </Text>
@@ -97,48 +59,12 @@ const Index = () => {
           </TouchableOpacity>
         </Link>
 
-      
-        
+        <Text style={styles.orText}>o</Text>
 
-
-
-
-        <View style={{position:'absolute'}}>
-
-        </View>
-
-
-
-
-
-
-        <Text
-          style={{
-            alignSelf: 'center',
-            color: 'gray',
-            fontStyle: 'italic',
-            fontWeight: '400',
-            textDecorationLine: 'underline',
-            top: 15,
-            marginBottom: 15,
-            fontSize: 16,
-          }}
-        >
-          o
-        </Text>
-
-
-      
-        <View style={styles.iconContainer} >
-          <TouchableOpacity >
+        <View style={styles.iconContainer}>
+          <TouchableOpacity>
             <FontAwesome
-              style={{
-                padding: 10,
-                borderRadius: 100,
-                paddingLeft: 15,
-                paddingRight: 15,
-                backgroundColor: '#1877F2',
-              }}
+              style={styles.icon}
               name="facebook"
               size={24}
               color="white"
@@ -147,13 +73,7 @@ const Index = () => {
 
           <TouchableOpacity>
             <MaterialIcons
-              style={{
-                padding: 10,
-                borderRadius: 100,
-                paddingLeft: 10,
-                paddingRight: 10,
-                backgroundColor: '#FBD98C',
-              }}
+              style={styles.icon}
               name="email"
               size={24}
               color="white"
@@ -161,34 +81,46 @@ const Index = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ justifyContent: 'center', flexDirection: 'row', paddingBottom: 15 }}>
-          <Text style={{ color: 'gray', fontSize: 12, fontFamily: 'Regular' }}>¿No tienes cuenta? </Text>
+        <View style={styles.registerContainer}>
+          <Text style={styles.registerText}>¿No tienes cuenta? </Text>
           <Link href="/pages/Register">
-            <Text style={{ color: '#FF7070', fontSize: 12, fontFamily: 'SemiBold' }}>Regístrate Acá</Text>
+            <Text style={styles.registerLink}>Regístrate Acá</Text>
           </Link>
         </View>
 
-        <View style={{ width: 250, height: 100, flexDirection: 'row', justifyContent: 'space-between', right: 50 }}>
-           <Checkboxs
-            label=" Declaro tener más de 13 años y acepto los Términos y condiciones, la Política de Privacidad y la Guía comunitaria."
-            checked={isPress}
-            onChange={handleCheckboxChange}
-          /> 
-        </View>
+        <Checkboxs
+          label="Declaro tener más de 13 años y acepto los Términos y condiciones, la Política de Privacidad y la Guía comunitaria."
+          checked={isPress}
+          onChange={handleCheckboxChange}
+        />
       </View>
-
-
-
-
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  welcomeText: {
+    fontSize: 28,
+    alignSelf: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FF7070',
+    fontFamily: 'Bold',
+    color: 'white',
+    top: 50,
+    height: 84,
+    width: 350,
+  },
+  logo: {
+    width: 350,
+    height: 300,
+    top: 20,
+    alignSelf: 'center',
+  },
+  infoText: {
+    alignSelf: 'center',
+    top: 20,
+    fontSize: 15,
+    color: 'gray',
+    fontStyle: 'italic',
   },
   Buttons: {
     top: 100,
@@ -215,6 +147,38 @@ const styles = StyleSheet.create({
     padding: 2,
     marginLeft: 48,
     fontFamily: 'Regular',
+  },
+  orText: {
+    alignSelf: 'center',
+    color: 'gray',
+    fontStyle: 'italic',
+    fontWeight: '400',
+    textDecorationLine: 'underline',
+    top: 15,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+  registerContainer: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    paddingBottom: 15,
+  },
+  registerText: {
+    color: 'gray',
+    fontSize: 12,
+    fontFamily: 'Regular',
+  },
+  registerLink: {
+    color: '#FF7070',
+    fontSize: 12,
+    fontFamily: 'SemiBold',
+  },
+  icon: {
+    padding: 10,
+    borderRadius: 100,
+    paddingLeft: 15,
+    paddingRight: 15,
+    backgroundColor: '#1877F2',
   },
 });
 
