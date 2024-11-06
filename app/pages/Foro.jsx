@@ -6,6 +6,9 @@ import { Link } from 'expo-router';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 
+
+
+
 export default function Foro() {
   const [posts, setPosts] = useState([]);
   const auth = FIREBASE_AUTH;
@@ -34,34 +37,46 @@ export default function Foro() {
     }
   };
 
+  function formatFirestoreDate(firestoreDate) {
+    // Verificar si el objeto tiene las propiedades seconds
+    if (firestoreDate && firestoreDate.seconds !== undefined) {
+        // Crear un objeto Date a partir de los segundos
+        const date = new Date(firestoreDate.seconds * 1000); // Convertir a milisegundos
 
+        // Comprobar si la fecha es válida
+        if (isNaN(date.getTime())) {
+            console.error("Fecha inválida:", firestoreDate);
+            return "Fecha inválida";
+        }
 
+        // Ajustar la fecha a la zona horaria UTC-3
+        const utcOffset = -3 * 60; // UTC-3 en minutos
+        const localDate = new Date(date.getTime() + (utcOffset * 60 * 1000));
 
-  const calcularTiempoPublicado = (post)=>  {
-    const ahora = new Date();
-    const diferenciaMs = ahora - new Date(post); 
-  
-    const segundos = Math.floor(diferenciaMs / 1000);
-    const minutos = Math.floor(segundos / 60);
-    const horas = Math.floor(minutos / 60);
-    const dias = Math.floor(horas / 24);
-    const semanas = Math.floor(dias / 7);
-  
-    if (semanas > 0) {
-      return `Hace ${semanas} semana${semanas > 1 ? 's' : ''}`;
-    } else if (dias > 0) {
-      return `Hace ${dias} día${dias > 1 ? 's' : ''}`;
-    } else if (horas > 0) {
-      return `Hace ${horas} hora${horas > 1 ? 's' : ''}`;
-    } else if (minutos > 0) {
-      return `Hace ${minutos} minuto${minutos > 1 ? 's' : ''}`;
+        // Obtener las partes de la fecha
+        const day = String(localDate.getDate()).padStart(2, '0'); // Obtener el día
+        const month = String(localDate.getMonth() + 1).padStart(2, '0'); // Obtener el mes (los meses inician en 0)
+        const year = localDate.getFullYear(); // Obtener el año
+        let hours = localDate.getHours(); // Obtener las horas
+        const minutes = String(localDate.getMinutes()).padStart(2, '0'); // Obtener los minutos
+        const ampm = hours >= 12 ? 'pm' : 'am'; // Determinar si es AM o PM
+
+        // Convertir a formato de 12 horas
+        hours = hours % 12; // Ajustar el formato de 12 horas
+        hours = hours ? String(hours).padStart(2, '0') : '12'; // Ajustar el formato de 12 horas (ej. 00 a 12)
+
+        // Retornar la fecha en el formato deseado
+        return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
     } else {
-      return `Hace unos segundos`;
+        console.error("Formato de fecha no válido:", firestoreDate);
+        return "Fecha inválida";
     }
-  }
+}
 
 
 
+
+ 
 
 
 
@@ -96,15 +111,15 @@ export default function Foro() {
       <ScrollView style={styles.postList}>
       {posts.map((post) => (
   <TouchableOpacity key={post.id}>
-    <Link href={{ pathname: '/pages/DetallesPostForo', params: post }}>
+    <Link href={{ pathname: '/pages/DetallesPostForo', params: {...post, createdAt: post.createdAt.seconds * 1000 } }}>
       <View style={styles.postContainer}>
         <Image source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }} style={styles.avatar} />
         <View style={styles.postContent}>
-          <Text style={styles.postTitle}>{post.title}</Text>
-          <Text style={styles.postDescription}>{post.content}</Text>
+          <Text style={styles.postTitle}> {post.title.length > 18 ? `${post.title.substring(0, 18)}...` : post.title} </Text>
+          <Text style={styles.postDescription}>{post.content.length > 10 ? `${post.content.substring(0, 10)}...` : post.content}</Text>
           <View style={styles.postFooter}>
-            <Text style={styles.postTime}>{calcularTiempoPublicado(post.createdAt)}</Text>
-            <Text style={styles.postTime}>{post.username}</Text>
+            <Text style={styles.postTime}>{formatFirestoreDate(post.createdAt)}</Text>
+            <Text style={styles.postUsername}>{post.username}</Text>
             <View style={styles.postStats}>
               <Ionicons name="heart" size={16} color="red" />
               <Text style={styles.statText}>{post.likes}</Text>
@@ -125,6 +140,7 @@ export default function Foro() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+    width:"100%"
   },
   header: {
     flexDirection: 'row',
@@ -157,6 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 16,
     paddingVertical: 10,
+    
   },
   filterButton: {
     paddingHorizontal: 12,
@@ -183,6 +200,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+  
   },
   avatar: {
     width: 40,
@@ -210,6 +228,13 @@ const styles = StyleSheet.create({
   postTime: {
     color: 'gray',
     fontSize: 12,
+
+  },
+  postUsername: {
+    color: 'gray',
+    fontSize: 12,
+    marginLeft:15,
+    marginRight:15
   },
   postStats: {
     flexDirection: 'row',
@@ -220,5 +245,6 @@ const styles = StyleSheet.create({
   },
   commentIcon: {
     marginLeft: 10,
+
   },
 });
