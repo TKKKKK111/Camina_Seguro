@@ -142,9 +142,9 @@ useEffect(() => {
   return (
     <KeyboardAvoidingView 
       style={styles.container} 
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior="position"
     >
-      <ScrollView style={styles.scrollView}>
+  
         {/* Header */}
         <View style={styles.header}>
         <Link asChild href="/pages/Foro">
@@ -211,7 +211,7 @@ useEffect(() => {
           </View>
 
       
-      </ScrollView>
+   
 
       {/* Add Comment Input */}
       <View style={styles.addCommentContainer}>
@@ -234,9 +234,7 @@ const styles = StyleSheet.create({
  
     backgroundColor: '#fff',
   },
-  scrollView: {
-
-  },
+  
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -347,6 +345,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     borderColor: '#ddd',
+
     borderRadius: 20,
     paddingHorizontal: 16,
     marginRight: 8,
