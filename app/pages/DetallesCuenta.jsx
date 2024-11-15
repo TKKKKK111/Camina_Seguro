@@ -4,10 +4,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { updateEmail, updatePassword } from 'firebase/auth';
 
 const DetallesCuenta = () => {
   const [users, setUsers] = useState({});
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
 
@@ -47,8 +49,8 @@ const DetallesCuenta = () => {
     }
 
     try {
-      const userDocRef = doc(db, 'users', user.uid); 
-      const userDoc = await getDoc(userDocRef); 
+      const userDocRef = doc(db, 'users', user.uid); // Referencia al documento del usuario en Firestore
+      const userDoc = await getDoc(userDocRef); // Obtener los datos del usuario
 
       if (userDoc.exists()) {
         setUsers(userDoc.data()); // Guardar los datos en el estado
