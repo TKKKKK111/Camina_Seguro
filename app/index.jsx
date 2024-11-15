@@ -88,11 +88,7 @@ const Index = () => {
           </Link>
         </View>
 
-        <Checkboxs
-          label="Declaro tener más de 13 años y acepto los Términos y condiciones, la Política de Privacidad y la Guía comunitaria."
-          checked={isPress}
-          onChange={handleCheckboxChange}
-        />
+   
       </View>
     </>
   );
