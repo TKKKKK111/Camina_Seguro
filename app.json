@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "CaminaSeguroApp",
-    "slug": "CaminaSeguroApp",
+    "name": "CaminaSeguroApp123",
+    "slug": "CaminaSeguroApp123",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "myapp",
@@ -9,42 +9,51 @@
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "86ae6fb4-4b08-446a-9da5-7d7d5d26a050"
       }
-
-
     },
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.ios.segurizate",
-      "googleServicesFile": "./GoogleService-Info.plist"
+    "runtimeVersion": {
+      "policy": "appVersion"
     },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.android.segurizate",
-      "googleServicesFile": "./google-services.json"
+    "updates": {
+      "url": "https://u.expo.dev/86ae6fb4-4b08-446a-9da5-7d7d5d26a050"
     },
-    "web": {
-      "bundler": "metro",
-      "output": "static"
-    
+    "android": {},
+    "ios": {}
+  },
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "com.ios.segurizate",
+    "googleServicesFile": "./GoogleService-Info.plist"
+  },
+  "android": {
+    "adaptiveIcon": {
+      "backgroundColor": "#ffffff"
     },
-    "plugins": [
-			"expo-router",
-			[
-				"expo-build-properties",
-				{
-					"ios": {
-						"useFrameworks": "static"
-					}
-				}
-			],
-			"@react-native-firebase/app",
-			"@react-native-firebase/auth"
-		],
-    "experiments": {
-      "typedRoutes": true
-    }
+    "package": "com.android.segurizate",
+    "googleServicesFile": "./google-services.json"
+  },
+  "web": {
+    "bundler": "metro",
+    "output": "static"
+  },
+  "plugins": [
+    "expo-router",
+    [
+      "expo-build-properties",
+      {
+        "ios": {
+          "useFrameworks": "static"
+        }
+      }
+    ],
+    "@react-native-firebase/app",
+    "@react-native-firebase/auth"
+  ],
+  "experiments": {
+    "typedRoutes": true
   }
-
+}
