@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, Alert, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
@@ -134,6 +134,8 @@ const DetalleReporte = () => {
   };
 
   return (
+
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
       <Link asChild href="/pages/SeleccionReporte">
         <TouchableOpacity>
@@ -198,6 +200,7 @@ const DetalleReporte = () => {
         </View>
       )}
     </View>
+    </TouchableWithoutFeedback>
   );
 };
 

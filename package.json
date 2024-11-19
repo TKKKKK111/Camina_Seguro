@@ -37,6 +37,7 @@
     "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
+    "expo-updates": "~0.25.27",
     "expo-web-browser": "~13.0.3",
     "firebase": "^10.13.2",
     "lucide-react-native": "^0.454.0",
@@ -50,8 +51,7 @@
     "react-native-reanimated": "~3.10.1",
     "react-native-safe-area-context": "4.10.5",
     "react-native-screens": "3.31.1",
-    "react-native-web": "~0.19.10",
-    "expo-updates": "~0.25.27"
+    "react-native-web": "~0.19.10"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

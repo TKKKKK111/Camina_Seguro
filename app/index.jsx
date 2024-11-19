@@ -39,7 +39,7 @@ const Index = () => {
       </SafeAreaView>
 
       <LinearGradient colors={['#E95E60', '#FFD270']}>
-        <Text style={styles.welcomeText}>Bienvenido a Segurizate</Text>
+        <Text style={styles.welcomeText}>Bienvenido a           Camina Seguro</Text>
 
         <Image
           source={require('../assets/imagenes/IconoLogin.png')}

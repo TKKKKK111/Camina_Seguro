@@ -77,7 +77,6 @@ const styles = StyleSheet.create({
     rowGap: 10,
     height: 200,
     bottom:30,
-    left:40
   },
   icon: {
     marginTop: 50,
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 90,
     alignItems: 'center',
-    width: 260,
+    width: 250,
   },
   texto: {
     color: '#831E52',

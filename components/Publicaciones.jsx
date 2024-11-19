@@ -14,12 +14,12 @@ const Publicacion = () => {
 
             <View style={styles.noticia} >
               <View style={styles.titulo}>
-              <FontAwesome style={{marginRight:30}} name="user" size={36} color="#FF7070" />
-              <Text style={{fontFamily:'Bold', fontSize:25, color:'#4682B4', alignSelf:'flex-start'}}>Acoso Callejero</Text>
+         
+              <Text style={{fontFamily:'Bold', fontSize:25, color:'#4682B4', alignSelf:'flex-start', left:40}}>Acoso Callejero</Text>
               </View>
-              <Text style={{color:'gray', fontFamily:'Bold', alignSelf:'flex-start'}}>Ubicación</Text>
-              <Text style={{fontFamily:'Regular', alignSelf:'center', height:'auto', width:340, textAlign:'center'}}>Lorem Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, eligendi id iusto perspiciatis voluptatem expedita quod alias temporibus aspernatur quam saepe voluptatibus libero molestiae. Animi consequatur repellendus laborum provident quis?</Text>
-              <Image style={{width:300,height:200}}
+              <Text style={{color:'gray', fontFamily:'Bold', alignSelf:'flex-start'}}>Esquina Blanca, Maipú</Text>
+              <Text style={{fontFamily:'Regular', alignSelf:'center', height:'auto', width:340, textAlign:'center'}}>Presencie un acto de acoso frente al Duoc!!!</Text>
+              <Image style={{width:350,height:280, borderRadius:10}}
               source={require('../assets/imagenes/duoc-image.webp')} />
 
             </View>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
 
 import { setDoc, doc, getDoc, query, collection, where, getDocs, limit } from 'firebase/firestore';
@@ -9,39 +9,47 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const BotonSOS = () => {
   const [location, setLocation] = useState(null);
+  const [loadingLocation, setLoadingLocation] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [tipoReporte, setTipoReporte] = useState('SOS');
-  const [comentario, setComentario] = useState('Reporte generado por urgencia');
   const auth = FIREBASE_AUTH;
   const db = FIREBASE_DB;
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permiso para acceder a la localización fue denegado');
-        return;
-      }
+      try {
+        setLoadingLocation(true);
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permiso para acceder a la localización fue denegado');
+          setLoadingLocation(false);
+          return;
+        }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+      } catch (error) {
+        console.error("Error obteniendo la localización:", error);
+        setErrorMsg('Error al obtener la localización');
+      } finally {
+        setLoadingLocation(false);
+      }
     })();
   }, []);
 
-
-
   const handleReportar = async () => {
     try {
-      const user = auth.currentUser; 
+      if (!location) {
+        Alert.alert('Error', errorMsg || 'Cargando información de ubicación...');
+        return;
+      }
 
+      const user = auth.currentUser;
       if (!user) {
         Alert.alert('Debes estar autenticado para reportar');
         return;
       }
 
-      
       const userDoc = await getDoc(doc(db, 'users', user.uid));
-
       if (!userDoc.exists()) {
         Alert.alert('No se encontró el usuario en la base de datos');
         return;
@@ -50,9 +58,9 @@ const BotonSOS = () => {
       const reportePendienteQuery = query(
         collection(db, 'reporte'),
         where('uid', '==', user.uid),
-        where('estado', 'in', ['abierto','pendiente']),
+        where('estado', 'in', ['abierto', 'pendiente']),
         where('resolvedAt', '==', null),
-        limit(1) 
+        limit(1)
       );
       const reportePendiente = await getDocs(reportePendienteQuery);
 
@@ -61,28 +69,22 @@ const BotonSOS = () => {
         return;
       }
 
-      const userName = userDoc.data().name || 'Usuario sin nombre'; 
-      const geo = location ? {
+      const userName = userDoc.data().name || 'Usuario sin nombre';
+      const geo = {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-      } : {
-        latitude: 'no disponible',
-        longitude: 'no disponible'
-      }; 
+      };
 
-
-      // Crear un ID único para el reporte basado en el timestamp
       const reportId = user.uid + '_' + new Date().toISOString();
 
-      // Almacenar datos en Firestore
       await setDoc(doc(db, 'reporte', reportId), {
-        uid: user.uid, 
-        name: userName, 
+        uid: user.uid,
+        name: userName,
         geolocalizacion: geo,
-        tipoReporte: {reporte:'SOS'}, 
-        comentario: {comentario:'Reporte generado por urgencia'}, 
+        tipoReporte: { reporte: 'SOS' },
+        comentario: { comentario: 'Reporte generado por urgencia' },
         createdAt: new Date(),
-        estado: 'abierto', 
+        estado: 'abierto',
         resolvedAt: null,
       });
 
@@ -94,11 +96,18 @@ const BotonSOS = () => {
   };
 
   return (
-    <TouchableOpacity onPress={handleReportar}>
-      <Text style={{ marginTop: 10 }}>
-        <FontAwesome name="warning" size={39} color="white" />
-      </Text>
-    </TouchableOpacity>
+    <View>
+      {loadingLocation ? (
+        <ActivityIndicator size="large" color="#FF7070" />
+      ) : (
+        <TouchableOpacity onPress={handleReportar}>
+          <Text style={{ marginTop: 10 }}>
+            <FontAwesome name="warning" size={39} color="white" />
+          </Text>
+        </TouchableOpacity>
+      )}
+      {errorMsg && <Text style={{ color: 'red', marginTop: 10 }}>{errorMsg}</Text>}
+    </View>
   );
 };
 
